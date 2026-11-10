@@ -1,0 +1,53 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {"major": 3, "minor": 22, "patch": 0},
+  "configurePresets": [
+    {
+      "name": "core-linux",
+      "displayName": "Core DSP and fixtures (no JUCE)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-core",
+      "cacheVariables": {
+        "MCBOY_BUILD_PLUGIN": "OFF",
+        "BUILD_TESTING": "ON",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "macos-universal",
+      "displayName": "Xcode universal Apple Silicon + Intel VST3",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build-mac",
+      "cacheVariables": {
+        "MCBOY_BUILD_PLUGIN": "ON",
+        "MCBOY_FETCH_JUCE": "ON",
+        "BUILD_TESTING": "ON",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED": "NO"
+      }
+    },
+    {
+      "name": "macos-native",
+      "displayName": "Xcode native architecture VST3",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build-mac-native",
+      "cacheVariables": {
+        "MCBOY_BUILD_PLUGIN": "ON",
+        "MCBOY_FETCH_JUCE": "ON",
+        "BUILD_TESTING": "ON",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "11.0",
+        "CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED": "NO"
+      }
+    }
+  ],
+  "buildPresets": [
+    {"name": "core-linux", "configurePreset": "core-linux"},
+    {"name": "macos-universal", "configurePreset": "macos-universal", "configuration": "Release"},
+    {"name": "macos-native", "configurePreset": "macos-native", "configuration": "Release"}
+  ],
+  "testPresets": [
+    {"name": "core-linux", "configurePreset": "core-linux", "output": {"outputOnFailure": true}},
+    {"name": "macos-universal", "configurePreset": "macos-universal", "configuration": "Release", "output": {"outputOnFailure": true}}
+  ]
+}

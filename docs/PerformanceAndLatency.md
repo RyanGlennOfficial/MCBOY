@@ -1,0 +1,13 @@
+# Performance, latency and safety — McBoy 0.9
+
+- **Actually tested core rates:** 44.1, 48, 88.2, 96, 192 kHz. Buffers 1–2048 frames and randomized automation-like block changes. Tests were Linux x86_64, not macOS DAW tests.
+- **Realtime allocations:** the JUCE-independent `Engine::process()` uses preallocated vectors and fixed-size STFT frames, and does not allocate, lock or do file I/O in its sample loop. `prepare()` allocates sample-rate-sized buffers. No general realtime-allocator detector or macOS Instruments profiling was run.
+- **Latency:** plugin source reports **zero host-compensated latency**. Most effects introduce wet-only delay naturally; **fx060 uses a 256-point FFT with 128-sample hop and approx 256 samples of wet STFT displacement**; the dry signal is not delayed. Pitch granular algorithms have inherent reading delays. Wet and dry will not always align phase-accurately.
+- **Tail:** JUCE wrapper reports an estimated 3-second tail; no actual host verification of tail length or detection of all residuals occurred. Feedback rings are bounded and all coefficients chosen to avoid unlimited gain.
+- **Safety guard:** asymptotic digital sample-peak ceiling about 0.89125FS = -1.00 dBFS on processed output. No lookahead or intersample true-peak guarantee. Bypass intentionally exposes uncapped dry signal. Guard OFF can exceed the ceiling.
+- **Aliasing:** high-drive/wavefold/clip stages are not oversampled; potential high-frequency aliasing is a known release blocker. Special effects are experimental, not certified emulations.
+- **Efficiency:** individual inactive modules avoid most expensive branches; shared history/combs still update. No percentage CPU measurements on any macOS architecture. All-on 100 effect worst case and plugin-thread scheduling budgets are not proven.
+- **Automation:** 28ms per-effect smoothing, ~25ms bypass crossfade. State changes to multi-tap buffer offsets can still make audible artifacts; click-free randomization not certified in a DAW. Randomize is a message-thread command, not a host audio-thread automation trigger.
+- **State and repeatability:** seed and raw patch restore as source values; PRNG free-running phase/tick is not checkpointed mid-song. Same values/settings at same process-start point are reproducible in the core, but different DAW seeks can produce different noise positions.
+
+**Before commercial release:** perform listening/bounce/automation/CPU regression in actual macOS VST3 hosts, pluginval, hostile state-data tests, peak and antialias measurements, and Apple arm64 + x86_64 validation. Record measured device/OS/host versions. Do not claim DAW or AAX compatibility from the Linux test suite.

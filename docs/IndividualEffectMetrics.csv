@@ -1,0 +1,101 @@
+id,name,rms_from_dry,closest_fx,closest_rms_difference,fixture
+fx001,"Slap",0.168354,fx030,0.105027,multitone+transient stereo 48kHz 0.5sec
+fx002,"Ping-Pong",0.183882,fx001,0.120653,multitone+transient stereo 48kHz 0.5sec
+fx003,"Meltback",0.243102,fx014,0.155662,multitone+transient stereo 48kHz 0.5sec
+fx004,"Rewind",0.270284,fx014,0.171077,multitone+transient stereo 48kHz 0.5sec
+fx005,"Stutter",0.262785,fx020,0.185645,multitone+transient stereo 48kHz 0.5sec
+fx006,"Doubler",0.184007,fx001,0.145613,multitone+transient stereo 48kHz 0.5sec
+fx007,"Scatter",0.214668,fx020,0.138301,multitone+transient stereo 48kHz 0.5sec
+fx008,"Grain Trail",0.145383,fx092,0.0514227,multitone+transient stereo 48kHz 0.5sec
+fx009,"Ghost Pre-Echo",0.212662,fx019,0.0961352,multitone+transient stereo 48kHz 0.5sec
+fx010,"Echo Collapse",0.216068,fx019,0.107598,multitone+transient stereo 48kHz 0.5sec
+fx011,"Plate Glow",0.191512,fx020,0.0125076,multitone+transient stereo 48kHz 0.5sec
+fx012,"Spring Twang",0.287164,fx052,0.135221,multitone+transient stereo 48kHz 0.5sec
+fx013,"Little Room",0.187081,fx019,0.0955553,multitone+transient stereo 48kHz 0.5sec
+fx014,"Endless Hall",0.191064,fx020,0.0238829,multitone+transient stereo 48kHz 0.5sec
+fx015,"Halo",0.201135,fx020,0.0675164,multitone+transient stereo 48kHz 0.5sec
+fx016,"Gate the Sky",0.188469,fx020,0.00777793,multitone+transient stereo 48kHz 0.5sec
+fx017,"Backward Bloom",0.18739,fx019,0.00257498,multitone+transient stereo 48kHz 0.5sec
+fx018,"Reflection Dice",0.22592,fx014,0.119969,multitone+transient stereo 48kHz 0.5sec
+fx019,"Hold the Clouds",0.187346,fx017,0.00257498,multitone+transient stereo 48kHz 0.5sec
+fx020,"Hide & Bloom",0.188776,fx019,0.00508938,multitone+transient stereo 48kHz 0.5sec
+fx021,"Chorus Soup",0.269833,fx035,0.155409,multitone+transient stereo 48kHz 0.5sec
+fx022,"Jet Lag",0.138667,fx086,0.118473,multitone+transient stereo 48kHz 0.5sec
+fx023,"Phase Slipper",0.170936,fx030,0.109942,multitone+transient stereo 48kHz 0.5sec
+fx024,"Rotary Crisis",0.24487,fx014,0.134692,multitone+transient stereo 48kHz 0.5sec
+fx025,"Tremble",0.110495,fx091,0.0757562,multitone+transient stereo 48kHz 0.5sec
+fx026,"Side-to-Side",0.153544,fx085,0.0226961,multitone+transient stereo 48kHz 0.5sec
+fx027,"Seasick",0.300054,fx014,0.183875,multitone+transient stereo 48kHz 0.5sec
+fx028,"Bell Ringer",0.229525,fx019,0.132391,multitone+transient stereo 48kHz 0.5sec
+fx029,"Warp Spiral",0.0523943,fx047,0.044907,multitone+transient stereo 48kHz 0.5sec
+fx030,"Filter Steps",0.105449,fx051,0.0518042,multitone+transient stereo 48kHz 0.5sec
+fx031,"Up an Octave",0.231476,fx019,0.136111,multitone+transient stereo 48kHz 0.5sec
+fx032,"Down an Octave",0.239755,fx019,0.150109,multitone+transient stereo 48kHz 0.5sec
+fx033,"Fifth Dimension",0.240325,fx017,0.149942,multitone+transient stereo 48kHz 0.5sec
+fx034,"Third Wheel",0.23859,fx019,0.14844,multitone+transient stereo 48kHz 0.5sec
+fx035,"Left Detune",0.202687,fx014,0.110642,multitone+transient stereo 48kHz 0.5sec
+fx036,"Right Detune",0.212361,fx014,0.123405,multitone+transient stereo 48kHz 0.5sec
+fx037,"Staircase",0.259782,fx019,0.162101,multitone+transient stereo 48kHz 0.5sec
+fx038,"Cluster Bomb",0.202083,fx019,0.0759046,multitone+transient stereo 48kHz 0.5sec
+fx039,"Talking Metal",0.183611,fx055,0.0327884,multitone+transient stereo 48kHz 0.5sec
+fx040,"Dive Bomb",0.211186,fx019,0.0939401,multitone+transient stereo 48kHz 0.5sec
+fx041,"Tape Heat",0.0351006,fx042,0.0268463,multitone+transient stereo 48kHz 0.5sec
+fx042,"Tube Sizzle",0.0406191,fx041,0.0268463,multitone+transient stereo 48kHz 0.5sec
+fx043,"Fuzz Monster",0.208422,fx050,0.0895377,multitone+transient stereo 48kHz 0.5sec
+fx044,"Redline",0.0710959,fx042,0.0491723,multitone+transient stereo 48kHz 0.5sec
+fx045,"Fold It",0.244884,fx092,0.185955,multitone+transient stereo 48kHz 0.5sec
+fx046,"Crushed Bits",0.00899127,fx093,0.00718463,multitone+transient stereo 48kHz 0.5sec
+fx047,"Broken Clock",0.0368891,fx098,0.0373385,multitone+transient stereo 48kHz 0.5sec
+fx048,"Transistor Static",0.22482,fx039,0.0734161,multitone+transient stereo 48kHz 0.5sec
+fx049,"Half-Wave",0.121147,fx092,0.0405989,multitone+transient stereo 48kHz 0.5sec
+fx050,"Chewed Speaker",0.186674,fx043,0.0895377,multitone+transient stereo 48kHz 0.5sec
+fx051,"Down the Drain",0.0698224,fx098,0.0210414,multitone+transient stereo 48kHz 0.5sec
+fx052,"Thin Air",0.183112,fx020,0.0378181,multitone+transient stereo 48kHz 0.5sec
+fx053,"Telephone Portal",0.136057,fx077,0.0138816,multitone+transient stereo 48kHz 0.5sec
+fx054,"Missing Tooth",0.0406404,fx098,0.0345348,multitone+transient stereo 48kHz 0.5sec
+fx055,"Scream Filter",0.194718,fx039,0.0327884,multitone+transient stereo 48kHz 0.5sec
+fx056,"Comb Canyon",0.159419,fx087,0.147277,multitone+transient stereo 48kHz 0.5sec
+fx057,"Vowel Mouth",0.299536,fx020,0.150278,multitone+transient stereo 48kHz 0.5sec
+fx058,"Tilt-a-Whirl",0.103252,fx077,0.0473785,multitone+transient stereo 48kHz 0.5sec
+fx059,"Glitter",0.058865,fx093,0.0553248,multitone+transient stereo 48kHz 0.5sec
+fx060,"Blur Vision",0.229439,fx011,0.115865,multitone+transient stereo 48kHz 0.5sec
+fx061,"Chop Shop",0.0952515,fx091,0.0817101,multitone+transient stereo 48kHz 0.5sec
+fx062,"Beat Again",0.246366,fx017,0.159669,multitone+transient stereo 48kHz 0.5sec
+fx063,"Drum Ghost",0.188589,fx019,0.0147567,multitone+transient stereo 48kHz 0.5sec
+fx064,"Triplet Trouble",0.232759,fx011,0.0771071,multitone+transient stereo 48kHz 0.5sec
+fx065,"Crooked Swing",0.264441,fx019,0.18595,multitone+transient stereo 48kHz 0.5sec
+fx066,"Dropout Dice",0.11461,fx068,0.0861974,multitone+transient stereo 48kHz 0.5sec
+fx067,"Pulse Grid",0.119814,fx068,0.0925792,multitone+transient stereo 48kHz 0.5sec
+fx068,"Sidechain Illusion",0.0672516,fx091,0.0439783,multitone+transient stereo 48kHz 0.5sec
+fx069,"Ratchet",0.265138,fx017,0.184686,multitone+transient stereo 48kHz 0.5sec
+fx070,"Record Scratch",0.260321,fx019,0.180065,multitone+transient stereo 48kHz 0.5sec
+fx071,"Dust",0.00573278,fx093,0.00188064,multitone+transient stereo 48kHz 0.5sec
+fx072,"Pops",0.00635347,fx071,0.00253223,multitone+transient stereo 48kHz 0.5sec
+fx073,"Slow Wobble",0.281,fx011,0.182046,multitone+transient stereo 48kHz 0.5sec
+fx074,"Flutterfly",0.240965,fx014,0.182938,multitone+transient stereo 48kHz 0.5sec
+fx075,"Tape Hiss",0.00823537,fx093,0.00619038,multitone+transient stereo 48kHz 0.5sec
+fx076,"Cassette Chew",0.258792,fx014,0.173147,multitone+transient stereo 48kHz 0.5sec
+fx077,"Pocket Radio",0.132281,fx053,0.0138816,multitone+transient stereo 48kHz 0.5sec
+fx078,"Digital Rot",0.266511,fx011,0.166247,multitone+transient stereo 48kHz 0.5sec
+fx079,"Grain Dust",0.231644,fx020,0.140518,multitone+transient stereo 48kHz 0.5sec
+fx080,"Tape Drop",0.0847463,fx086,0.0714089,multitone+transient stereo 48kHz 0.5sec
+fx081,"Wide Boy",0.184867,fx094,0.157435,multitone+transient stereo 48kHz 0.5sec
+fx082,"Twist M/S",0.233483,fx084,0.033042,multitone+transient stereo 48kHz 0.5sec
+fx083,"Haas House",0.0705151,fx059,0.0669943,multitone+transient stereo 48kHz 0.5sec
+fx084,"Mono Moment",0.21749,fx082,0.033042,multitone+transient stereo 48kHz 0.5sec
+fx085,"Orbit",0.148376,fx026,0.0226961,multitone+transient stereo 48kHz 0.5sec
+fx086,"Fake 3D",0.0694392,fx091,0.0381644,multitone+transient stereo 48kHz 0.5sec
+fx087,"Phase Roto",0.0377246,fx047,0.0379494,multitone+transient stereo 48kHz 0.5sec
+fx088,"De-Correlate",0.0605237,fx098,0.0360649,multitone+transient stereo 48kHz 0.5sec
+fx089,"Spin Cycle",0.185532,fx084,0.0496196,multitone+transient stereo 48kHz 0.5sec
+fx090,"Image Jitter",0.0848904,fx071,0.0847139,multitone+transient stereo 48kHz 0.5sec
+fx091,"Squeeze",0.0520118,fx041,0.0365473,multitone+transient stereo 48kHz 0.5sec
+fx092,"Brick Party",0.137465,fx049,0.0405989,multitone+transient stereo 48kHz 0.5sec
+fx093,"Guillotine",0.00573283,fx071,0.00188064,multitone+transient stereo 48kHz 0.5sec
+fx094,"Attack Jack",0.0743869,fx029,0.063216,multitone+transient stereo 48kHz 0.5sec
+fx095,"Soft Landing",0.0687828,fx091,0.041835,multitone+transient stereo 48kHz 0.5sec
+fx096,"Feedback Gremlin",0.1617,fx092,0.0564085,multitone+transient stereo 48kHz 0.5sec
+fx097,"Volume Lurch",0.0665466,fx093,0.0663273,multitone+transient stereo 48kHz 0.5sec
+fx098,"Chaos Follower",0.0522746,fx051,0.0210414,multitone+transient stereo 48kHz 0.5sec
+fx099,"Broken Circuit",0.150743,fx044,0.114029,multitone+transient stereo 48kHz 0.5sec
+fx100,"Cosmic Implosion",0.15851,fx086,0.148098,multitone+transient stereo 48kHz 0.5sec

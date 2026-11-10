@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# Build McBoy VST3 + Standalone with Apple's Xcode generator.
+# Usage: ./scripts/build_macos.sh [universal|native|arm64|x86_64]
+# Set JUCE_DIR to an existing compatible checkout, or the script will clone
+# the pinned reviewed JUCE 8 branch release into external/JUCE.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MODE="${1:-universal}"
+case "$MODE" in
+  universal) ARCHS="arm64;x86_64" ;;
+  native)     ARCHS="$(uname -m)" ;;
+  arm64|x86_64) ARCHS="$MODE" ;;
+  *) echo "Usage: $0 [universal|native|arm64|x86_64]" >&2; exit 2 ;;
+esac
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  echo "ERROR: macOS and Xcode are required to compile a macOS VST3 bundle." >&2; exit 1
+fi
+for executable in xcodebuild xcrun cmake git; do
+  command -v "$executable" >/dev/null || { echo "Missing $executable" >&2; exit 1; }
+done
+xcodebuild -version
+xcrun --sdk macosx --show-sdk-path >/dev/null
+
+JUCE_DIR="${JUCE_DIR:-$ROOT/external/JUCE}"
+JUCE_TAG="8.0.16-security"
+if [[ ! -f "$JUCE_DIR/CMakeLists.txt" ]]; then
+  if [[ -d "$JUCE_DIR" ]]; then
+    echo "JUCE_DIR exists but contains no CMakeLists.txt: $JUCE_DIR" >&2; exit 1
+  fi
+  echo "Fetching JUCE $JUCE_TAG (internet required) ..."
+  mkdir -p "$(dirname "$JUCE_DIR")"
+  git clone --depth 1 --branch "$JUCE_TAG" https://github.com/juce-framework/JUCE.git "$JUCE_DIR"
+fi
+
+BUILD_DIR="${MCBOY_BUILD_DIR:-$ROOT/build-mac}"
+cmake -S "$ROOT" -B "$BUILD_DIR" -G Xcode \
+  "-DJUCE_DIR=$JUCE_DIR" \
+  -DMCBOY_BUILD_PLUGIN=ON -DBUILD_TESTING=ON \
+  "-DCMAKE_OSX_ARCHITECTURES=$ARCHS" \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+  -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO
+
+# Xcode project is automatically generated at build-mac/McBoy.xcodeproj.
+cmake --build "$BUILD_DIR" --config Release \
+  --target McBoyPlugin_VST3 McBoyPlugin_Standalone mcboy_juce_smoke mcboy_core_smoke mcboy_audio_stress mcboy_uniqueness mcboy_render_demo \
+  --parallel "${MCBOY_JOBS:-4}"
+ctest --test-dir "$BUILD_DIR" -C Release --output-on-failure
+
+BUNDLE="$BUILD_DIR/McBoyPlugin_artefacts/Release/VST3/McBoy.vst3"
+if [[ ! -d "$BUNDLE" ]]; then
+  echo "ERROR: expected VST3 not found at $BUNDLE" >&2
+  find "$BUILD_DIR" -type d -name 'McBoy.vst3' -print >&2
+  exit 1
+fi
+
+# JUCE/Xcode signing can vary; ad-hoc sign for local development only.
+# This is NOT a Developer ID signature and NOT notarization.
+codesign --force --deep --sign - "$BUNDLE"
+BIN="$BUNDLE/Contents/MacOS/McBoy"
+[[ -f "$BIN" ]] || { echo "ERROR: VST3 executable missing" >&2; exit 1; }
+ARCH_REPORT="$(lipo -archs "$BIN")"
+echo "Plugin architectures: $ARCH_REPORT"
+if [[ "$MODE" == universal && "$ARCH_REPORT" != *arm64* ]]; then
+  echo "ERROR: requested universal binary lacks arm64" >&2; exit 1
+fi
+if [[ "$MODE" == universal && "$ARCH_REPORT" != *x86_64* ]]; then
+  echo "ERROR: requested universal binary lacks x86_64" >&2; exit 1
+fi
+codesign --verify --verbose=2 "$BUNDLE"
+OUTPUT="$ROOT/dist"
+mkdir -p "$OUTPUT"
+ARCHIVE="$OUTPUT/McBoy-macOS-$MODE.vst3.zip"
+ditto -c -k --sequesterRsrc --keepParent "$BUNDLE" "$ARCHIVE"
+shasum -a 256 "$ARCHIVE" > "$ARCHIVE.sha256"
+
+echo
+printf 'SUCCESS (macOS build only):\n  VST3: %s\n  ZIP: %s\n  Xcode project: %s\n' "$BUNDLE" "$ARCHIVE" "$BUILD_DIR/McBoy.xcodeproj"
+echo "This does NOT validate DAW loading, host automation, or notarization."
+echo "To install: ./scripts/install_macos.sh \"$BUNDLE\""
