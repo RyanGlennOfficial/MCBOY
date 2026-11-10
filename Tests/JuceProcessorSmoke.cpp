@@ -84,8 +84,8 @@ int main() {
         check(reload.state.getRawParameterValue("fx049")->load()<.01f,
               "State reload lost A/B comparison slot");
         reload.applyFactoryPreset(1);
-        check(reload.state.getRawParameterValue("fx011")->load()>.95f,
-              "Factory preset did not restore Plate Glow");
+        check(std::abs(reload.state.getRawParameterValue("fx011")->load()-.85f)<.002f,
+              "Factory preset did not restore Plate Glow to its defined 0.85 value");
         reload.resetNeutral();
         check(reload.state.getRawParameterValue("fx011")->load()<.0001f,
               "Neutral reset failed");
