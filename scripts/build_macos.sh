@@ -81,7 +81,7 @@ import sys
 bundle = Path(sys.argv[1])
 info = plistlib.loads((bundle / "Contents/Info.plist").read_bytes())
 module = (bundle / "Contents/Resources/moduleinfo.json").read_text(encoding="utf-8")
-vendors = re.findall(r'"Vendor"\\s*:\\s*"([^"]+)"', module)
+vendors = re.findall(r'"Vendor"\s*:\s*"([^"]+)"', module)
 if len(vendors) < 3 or any(vendor != "RG Audio" for vendor in vendors):
     raise SystemExit(f"ERROR: expected RG Audio vendor in VST3 metadata, found {vendors!r}")
 bundle_id = info.get("CFBundleIdentifier")
