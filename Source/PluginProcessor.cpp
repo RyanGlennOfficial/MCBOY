@@ -11,8 +11,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout McBoyAudioProcessor::createP
         layout.add(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{id,1}, name,juce::NormalisableRange<float>{0.f,1.f,.0001f},0.f));
     }
-    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"degree",1},"Degree",juce::NormalisableRange<float>{0.f,1.f,.0001f},.3f));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"mix",1},"Master Mix",juce::NormalisableRange<float>{0.f,1.f,.0001f},.75f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"degree",1},"Degree",juce::NormalisableRange<float>{0.f,1.f,.0001f},.72f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"mix",1},"Master Mix",juce::NormalisableRange<float>{0.f,1.f,.0001f},1.f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"output",1},"Output (dB)",juce::NormalisableRange<float>{-18.f,6.f,.01f},0.f));
     layout.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{"guard",1},"Digital Peak Guard",true));
     layout.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{"bypass",1},"Bypass",false));
