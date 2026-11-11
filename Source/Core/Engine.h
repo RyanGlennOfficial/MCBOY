@@ -44,6 +44,7 @@ public:
         env.fill(0.f); brickEnv.fill(0.f); dcState.fill(0.f);
         sampleHold.fill(0.f); holdCount.fill(0); chopGain=1.f; dropoutGain=1.f;
         tick=0; lastGrid=~uint64_t{0}; bypassWet = controls.bypass ? 0.f : 1.f;
+        wetPresence = 0.f;
         noise = SplitMix64(controls.seed);
         extra.reset();
         extra.setSeed(controls.seed);
@@ -216,8 +217,17 @@ public:
             dcState[0] = dcCoeff*dcState[0] + (1.f-dcCoeff)*wetL;
             dcState[1] = dcCoeff*dcState[1] + (1.f-dcCoeff)*wetR;
             wetL -= dcState[0]; wetR -= dcState[1];
-            // Normalize category returns instead of stacking 29 effects serially.
-            float mixL=(a+wetL)/(1.f+weights),mixR=(b+wetR)/(1.f+weights);
+            // True wet bus: never add the unprocessed input to the effects return.
+            // Previously, (input + wet) / (1 + weights) buried the effects and
+            // leaked a strong direct path even at 100% MIX.
+            const float wetOnlyL = weights > 1.e-7f ? wetL / weights : a;
+            const float wetOnlyR = weights > 1.e-7f ? wetR / weights : b;
+            // Crossfade smoothly between neutral and effect-only when effects
+            // engage/disengage. DEGREE=0 remains uncolored.
+            const float wetTarget = std::clamp(weights * 12.f, 0.f, 1.f);
+            wetPresence += smoothToggle * (wetTarget - wetPresence);
+            float mixL=a + wetPresence*(wetOnlyL-a);
+            float mixR=b + wetPresence*(wetOnlyR-b);
             if(amount(81)>1e-5f){
                 const float mid=.5f*(mixL+mixR),side=.5f*(mixL-mixR);
                 const float width=1.f+amount(81)*.85f;
@@ -267,7 +277,7 @@ private:
     std::array<float,100> smooth{};
     std::array<float,2> lp{},hpState{},teleHP{},teleLP{},revDamp{},env{},brickEnv{},dcState{},sampleHold{};
     std::array<int,2> holdCount{};
-    float chopGain=1.f,dropoutGain=1.f,dropTarget=1.f,bypassWet=1.f;
+    float chopGain=1.f,dropoutGain=1.f,dropTarget=1.f,bypassWet=1.f,wetPresence=0.f;
     SplitMix64 noise{0xA74E12B50B0C0101ULL};
     ExtraEffects extra;
 };
