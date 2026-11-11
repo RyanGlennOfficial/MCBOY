@@ -19,6 +19,26 @@ int main(){
     engine.setControls(c);engine.process(l.data(),r.data(),N);
     for(int i=0;i<N;++i){if(std::abs(l[i]-ref[i])>1e-6f || std::abs(r[i]-refR[i])>1e-6f) {std::cerr<<"degree zero failed "<<i<<' '<<l[i]<<' '<<ref[i]<<'\n';return 1;}}
     std::cout << "PASS: DEGREE zero is dry (at guard OFF, unity output)\n";
+    // At 100% MIX, the undelayed original impulse must NOT pass through.
+    // Exercise the exact bug reported by users with the Slap delay alone.
+    c.raw.fill(0.f);c.raw[0]=1.f;c.degree=1.f;c.mix=1.f;c.guard=false;
+    engine.reset();engine.setControls(c);
+    std::vector<float> warm(24000,0.f),warmR(24000,0.f);
+    engine.process(warm.data(),warmR.data(),int(warm.size()));
+    l.assign(N,0.f);r.assign(N,0.f);l[0]=.4f;r[0]=.4f;
+    engine.process(l.data(),r.data(),N);
+    for(int i=0;i<1000;++i)if(std::abs(l[size_t(i)])>1e-4f || std::abs(r[size_t(i)])>1e-4f){
+        std::cerr<<"FAIL: dry input leaks through 100% wet at sample "<<i<<" level "<<l[size_t(i)]<<"\n";return 16;
+    }
+    float delayedPeak=0.f;
+    for(int i=2500;i<10000;++i)delayedPeak=std::max(delayedPeak,std::abs(l[size_t(i)]));
+    if(delayedPeak<.08f){std::cerr<<"FAIL: wet delay disappeared at 100% mix\n";return 17;}
+    std::cout<<"PASS: MIX=100% suppresses direct dry impulse and retains audible wet delay\n";
+    engine.reset();c.mix=0.f;engine.setControls(c);
+    l.assign(N,0.f);r.assign(N,0.f);l[0]=.4f;r[0]=.4f;
+    engine.process(l.data(),r.data(),N);
+    if(std::abs(l[0]-.4f)>1e-5f || std::abs(r[0]-.4f)>1e-5f)return 18;
+    std::cout<<"PASS: MIX=0% preserves dry impulse\n";
     int measured=0;
     for(int fx=0;fx<100;++fx)if(implemented[size_t(fx)]){
         engine.reset();c.raw.fill(0.f);c.raw[size_t(fx)]=1.f;c.degree=1.f;c.mix=1.f;c.guard=false;
