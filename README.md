@@ -1,9 +1,20 @@
 # McBoy — 100-knob experimental audio multi-effect
 
-**Version 0.9.2 — RG Audio developer branding; includes corrected 0.9.1 wet/dry routing.**
+**Version 1.0.0 — extreme chaos engine; RG Audio universal VST3.**
 **macOS binaries are built by GitHub Actions.** See the most recent successful Actions artifact and build logs; DAW sound-quality/host compatibility still need hands-on confirmation.
 
 McBoy is an original 100-knob experimental effects console for music production. Ten banks of ten rotary controls surround a giant **MCBOY!** shuffle button and an independent **DEGREE** intensity ceiling. Labels are OFF by default; Option-/right-click locks a knob. A/B storage and swapping, Undo/Redo, factory preset selection, copy/paste state, true parameter automation, and randomization controls are part of the written JUCE wrapper.
+
+## McBoy 1.0 extreme audio changes
+
+- **MIX 0% is exactly dry** at unity output even with the digital peak guard ON.
+- **MIX 100% uses only processed effect returns** whenever any effect is active; newly activated effects fade in from silence, never from an injected dry reference. With all effect controls neutral, output is transparently dry by design.
+- **The central randomizer is far stronger.** High DEGREE selects about 50-60 distinct sounds across the ten effect banks and gives them near-full raw values. Low DEGREE selects sparse lower values. Locked knobs remain untouched, and seeded shuffles are deterministic.
+- **Dramatic wet-only processing** follows the 100 separate branches: seed-varied bank focus, massive delayed/warped wet-bus motion, strong rhythmic stutter, aggressive wet-only waveshaping, tonal cutting, and pitch/space emphasis. These use the existing uniquely numbered effect parameters; no extra automation IDs are introduced.
+- **DEGREE controls both the shuffle distribution and audible effects** by the existing per-knob `effective = raw × degree` mapping. Increasing DEGREE never erases raw values, and the intensity-stage maps take effective amounts only.
+- **Safeguard** remains on by default: no unbounded global feedback; digital sample peak limiting approaches -1 dBFS. It is not guaranteed intersample true-peak limiting or hearing protection.
+- New instances open at **72% DEGREE / 100% MIX / labels OFF** for more immediate effect. Existing DAW sessions should restore their saved values and plugin IDs normally.
+- `Tests/ChaosIntensity.cpp` objectively verifies 0% exact dry, no direct wet-only impulse, generated shuffle density, audio differences between seeds, DEGREE sweep, finite output, and bounded sample peaks. It runs on GitHub Actions alongside JUCE smoke and 100-control tests. These tests don't replace listening/host validation.
 
 ## Developer metadata and compatibility
 
