@@ -1,0 +1,36 @@
+name: Build McBoy Universal VST3 (Intel macOS runner)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/macos-intel-alternate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  macos-intel-universal:
+    runs-on: macos-15-intel
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify full source tree
+        shell: bash
+        run: |
+          test -f Source/Core/Engine.h
+          test -f Source/Core/IntensityStage.h
+          test -f Tests/ChaosIntensity.cpp
+          test -f Source/Core/ExtraEffects.h
+          test -f scripts/build_macos.sh
+      - name: Build universal arm64 and x86_64 VST3 and execute all tests
+        shell: bash
+        run: bash scripts/build_macos.sh universal
+      - name: Upload actual universal VST3 binary and checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: McBoy-v1.0-macOS-universal-vst3-intelrunner
+          path: |
+            dist/McBoy-macOS-universal.vst3.zip
+            dist/McBoy-macOS-universal.vst3.zip.sha256
+          if-no-files-found: error
+          retention-days: 30
