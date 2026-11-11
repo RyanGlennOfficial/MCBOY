@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for id in 42950893842 42950941303 42950946458 42950951083 42950955124 42950961618 42950966196 42951093443; do
+          for id in 42950893842 42950941303 42950946458 42950951083 42950955124 42950961618 42950966196 42951093443 42952873928; do
             state="$(gh api "/repos/$GH_REPO/actions/runs/$id" --jq .status || true)"
             if [[ "$state" == "queued" || "$state" == "in_progress" ]]; then
               echo "Cancel obsolete McBoy run $id ($state)"
@@ -28,4 +28,4 @@ jobs:
               echo "Leave finished run $id unchanged ($state)"
             fi
           done
-          echo "Latest release candidate run 42952014141 is deliberately untouched."
+          echo "Verified v1.0 release run 42952014141 succeeded; only redundant alternate runner is canceled."
