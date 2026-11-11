@@ -9,6 +9,7 @@
 #include "../EffectNames.h"
 #include "Randomizer.h"
 #include "ExtraEffects.h"
+#include "IntensityStage.h"
 
 namespace mcboy {
 constexpr float pi = 3.14159265358979323846f;
@@ -16,7 +17,7 @@ inline float sat(float x) noexcept { return std::tanh(x); }
 inline float clampSample(float x) noexcept { return std::isfinite(x) ? std::clamp(x, -16.f, 16.f) : 0.f; }
 struct CoreControls {
     std::array<float,100> raw{};
-    float degree = .30f, mix = .75f, outputDb = 0.f;
+    float degree = .72f, mix = 1.f, outputDb = 0.f;
     bool guard = true, bypass = false;
     uint64_t seed = 0xA74E12B50B0C0101ULL;
 };
@@ -30,6 +31,7 @@ public:
         for (auto& h : flanger) h.assign(size_t(sr*.075)+16, 0.f);
         const double lengths[4] = {.0297,.0371,.0411,.0437};
         for (int c=0;c<2;++c) for (int i=0;i<4;++i) comb[c][i].assign(size_t(sr*lengths[i])+3+size_t(c*17),0.f);
+        intensity.prepare(sr);
         extra.prepare(sr);
         reset();
     }
@@ -49,14 +51,15 @@ public:
         extra.reset();
         extra.setSeed(controls.seed);
         noiseSeed=controls.seed;
+        intensity.reset(); intensity.setSeed(controls.seed);
     }
     void setControls(const CoreControls& next) noexcept {
         controls = next;
         const auto safe=[](float x,float fallback,float lo,float hi) noexcept {
             return std::isfinite(x) ? std::clamp(x,lo,hi) : fallback;
         };
-        controls.degree=safe(controls.degree,.3f,0.f,1.f);
-        controls.mix=safe(controls.mix,.75f,0.f,1.f);
+        controls.degree=safe(controls.degree,.72f,0.f,1.f);
+        controls.mix=safe(controls.mix,1.f,0.f,1.f);
         controls.outputDb=safe(controls.outputDb,0.f,-18.f,6.f);
         for(auto& v:controls.raw) v=safe(v,0.f,0.f,1.f);
         // A stored patch seed governs all procedural glitches/noise.
@@ -64,6 +67,7 @@ public:
             noiseSeed=controls.seed;
             noise=SplitMix64(controls.seed);
             extra.setSeed(controls.seed);
+            intensity.setSeed(controls.seed);
         }
     }
     // Inputs are modified in-place. If right==nullptr, process mono.
@@ -95,7 +99,10 @@ public:
             const auto add=[&](int number,float l,float r,float coefficient=1.5f) noexcept {
                 const auto w=coefficient*amount(number);
                 if(w<1.0e-6f) return;
-                wetL+=clampSample(l)*w; wetR+=clampSample(r)*w; weights+=w;
+                const float focus=intensity.categoryGain((number-1)/10,amount(number));
+                wetL+=clampSample(l)*w*focus;
+                wetR+=clampSample(r)*w*focus;
+                weights+=w*focus;
             };
             // TIME: independent slap and cross-feedback ping-pong.
             if(amount(1)>1e-5f){const float t=srf*(.075f+.09f*amount(1));add(1,lag(0,t),lag(1,t));}
@@ -107,7 +114,10 @@ public:
             float reverb[2]={0,0};
             for(int c=0;c<2;++c) for(int k=0;k<4;++k){
                 auto& v=comb[c][k];float old=v[cpos[size_t(k)]%v.size()];
-                v[cpos[size_t(k)]%v.size()]=.21f*input[c]+.77f*old;
+                // Strong Hall/Freeze amounts produce longer, bounded tails.
+                const float hall=std::max(amount(14),amount(19));
+                const float feedback=std::min(.977f,.77f+.207f*hall);
+                v[cpos[size_t(k)]%v.size()]=.24f*input[c]+feedback*old;
                 reverb[c]+=.25f*old;
             }
             if(amount(11)>1e-5f){
@@ -213,21 +223,20 @@ public:
             if(amount(92)>1e-5f)add(92,brick[0]*1.6f,brick[1]*1.6f);
             // Additional 71 unique modules share the same calibrated parallel bus.
             extra.process(a,b,srf,tick,bpm,smooth,lag,add,reverb);
-            // Wet-only DC blocking leaves the neutral dry signal untouched.
+            // DC blocker belongs only to the effect return.
             dcState[0] = dcCoeff*dcState[0] + (1.f-dcCoeff)*wetL;
             dcState[1] = dcCoeff*dcState[1] + (1.f-dcCoeff)*wetR;
             wetL -= dcState[0]; wetR -= dcState[1];
-            // True wet bus: never add the unprocessed input to the effects return.
-            // Previously, (input + wet) / (1 + weights) buried the effects and
-            // leaked a strong direct path even at 100% MIX.
-            const float wetOnlyL = weights > 1.e-7f ? wetL / weights : a;
-            const float wetOnlyR = weights > 1.e-7f ? wetR / weights : b;
-            // Crossfade smoothly between neutral and effect-only when effects
-            // engage/disengage. DEGREE=0 remains uncolored.
-            const float wetTarget = std::clamp(weights * 12.f, 0.f, 1.f);
-            wetPresence += smoothToggle * (wetTarget - wetPresence);
-            float mixL=a + wetPresence*(wetOnlyL-a);
-            float mixR=b + wetPresence*(wetOnlyR-b);
+            const bool hasWet = weights > 1.e-7f;
+            float mixL = hasWet ? wetL/weights : a;
+            float mixR = hasWet ? wetR/weights : b;
+            // Strict wet bus: fade effects in from silence, not from dry audio.
+            wetPresence += smoothToggle*((hasWet?1.f:0.f)-wetPresence);
+            if(hasWet){
+                const auto processed=intensity.process(mixL,mixR,tick,bpm,smooth);
+                mixL=processed[0]*wetPresence;
+                mixR=processed[1]*wetPresence;
+            } else intensity.inactive();
             if(amount(81)>1e-5f){
                 const float mid=.5f*(mixL+mixR),side=.5f*(mixL-mixR);
                 const float width=1.f+amount(81)*.85f;
@@ -240,7 +249,8 @@ public:
             const float mix=controls.mix;
             float outL=((1.f-mix)*a+mix*mixL)*outputGain;
             float outR=((1.f-mix)*b+mix*mixR)*outputGain;
-            if(controls.guard){outL=digitalPeakGuard(outL);outR=digitalPeakGuard(outR);}
+            // 0% MIX stays completely dry even when the guard is on.
+            if(controls.guard && mix>0.f){outL=digitalPeakGuard(outL);outR=digitalPeakGuard(outR);}
             left[n]=clampSample(a*(1.f-bypassWet)+outL*bypassWet);
             if(right)right[n]=clampSample(b*(1.f-bypassWet)+outR*bypassWet);
             else left[n]=.5f*(left[n]+clampSample(b*(1.f-bypassWet)+outR*bypassWet));
@@ -280,5 +290,6 @@ private:
     float chopGain=1.f,dropoutGain=1.f,dropTarget=1.f,bypassWet=1.f,wetPresence=0.f;
     SplitMix64 noise{0xA74E12B50B0C0101ULL};
     ExtraEffects extra;
+    IntensityStage intensity;
 };
 }
