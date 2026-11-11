@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(McBoy VERSION 0.9.1 LANGUAGES C CXX)
+project(McBoy VERSION 0.9.2 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CTest)
@@ -23,8 +23,10 @@ if(MCBOY_BUILD_PLUGIN)
    message(FATAL_ERROR "JUCE not found. Configure with -DJUCE_DIR=/path/to/JUCE or -DMCBOY_FETCH_JUCE=ON. To run DSP tests alone use -DMCBOY_BUILD_PLUGIN=OFF")
  endif()
  juce_add_plugin(McBoyPlugin
-  COMPANY_NAME "Heatwave Music Group"
-  COMPANY_WEBSITE "https://heatwavemusicgroup.com"
+  COMPANY_NAME "RG Audio"
+  BUNDLE_ID "audio.rgaudio.mcboy"
+  # Legacy manufacturer four-character ID retained to preserve existing VST3
+  # component/controller class IDs and previously saved host sessions.
   PLUGIN_MANUFACTURER_CODE HWMG
   PLUGIN_CODE MCBY
   FORMATS VST3 Standalone
