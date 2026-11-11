@@ -1,9 +1,17 @@
 # McBoy — 100-knob experimental audio multi-effect
 
-**Version 0.9.1 — corrected master wet/dry routing.**
+**Version 0.9.2 — RG Audio developer branding; includes corrected 0.9.1 wet/dry routing.**
 **macOS binaries are built by GitHub Actions.** See the most recent successful Actions artifact and build logs; DAW sound-quality/host compatibility still need hands-on confirmation.
 
 McBoy is an original 100-knob experimental effects console for music production. Ten banks of ten rotary controls surround a giant **MCBOY!** shuffle button and an independent **DEGREE** intensity ceiling. Labels are OFF by default; Option-/right-click locks a knob. A/B storage and swapping, Undo/Redo, factory preset selection, copy/paste state, true parameter automation, and randomization controls are part of the written JUCE wrapper.
+
+## Developer metadata and compatibility
+
+- **VST3 manufacturer/vendor shown to hosts:** RG Audio.
+- **macOS bundle ID:** `audio.rgaudio.mcboy`.
+- **Plugin name:** McBoy.
+- **Legacy VST3 four-character manufacturer code:** `HWMG` (unchanged intentionally); **plugin code:** `MCBY` (unchanged). These determine internal JUCE VST3 class IDs. Retaining both allows hosts to associate this plugin with previously saved McBoy instances. These internal legacy codes do not control the displayed developer name.
+- Release build scripts verify the **compiled bundle**, not just source configuration, for the RG Audio vendor and correct bundle ID.
 
 ## 0.9.1 mix bug fix
 
