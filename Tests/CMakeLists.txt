@@ -17,3 +17,7 @@ add_test(NAME All100Uniqueness COMMAND mcboy_uniqueness)
 
 add_executable(mcboy_render_demo RenderDemo.cpp)
 target_compile_features(mcboy_render_demo PRIVATE cxx_std_17)
+
+add_executable(mcboy_chaos_intensity ChaosIntensity.cpp)
+target_compile_features(mcboy_chaos_intensity PRIVATE cxx_std_17)
+add_test(NAME ChaosIntensity COMMAND mcboy_chaos_intensity)
