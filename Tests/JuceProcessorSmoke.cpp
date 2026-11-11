@@ -28,8 +28,8 @@ int main() {
         McBoyAudioProcessor instance;
         check(instance.getParameters().size()==106, "Expected 100 fx + 6 utility host parameters");
         check(instance.state.getRawParameterValue("labels")->load() < .5f, "Labels should default OFF");
-        check(std::abs(instance.state.getRawParameterValue("degree")->load()-.3f)<.001f,
-              "Degree should default to 0.3");
+        check(std::abs(instance.state.getRawParameterValue("degree")->load()-.72f)<.001f,
+              "Degree should default to 0.72");
         for(int i=1;i<=100;++i){
             auto id=juce::String::formatted("fx%03d",i);
             check(instance.state.getParameter(id)!=nullptr, "Missing FX automation parameter");
