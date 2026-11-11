@@ -6,7 +6,7 @@
 namespace mcboy {
 struct Preset {
   std::string name;
-  float degree=.30f,mix=.75f,outputDb=0.f;
+  float degree=.72f,mix=1.f,outputDb=0.f;
   bool guard=true,bypass=false,labels=false;
   uint64_t seed=0xA74E12B50B0C0101ULL;
   std::array<float,100> raw{};
@@ -16,7 +16,7 @@ inline std::vector<Preset> factoryPresets() {
   std::vector<Preset> p;
   p.reserve(17);
   { Preset s;
-    s.name="Start Here"; s.degree=0.3000f; s.mix=0.7500f; s.outputDb=0.00f;
+    s.name="Start Here"; s.degree=0.7200f; s.mix=1.0000f; s.outputDb=0.00f;
     s.seed=0xaef48190855da820ULL;
     p.emplace_back(std::move(s)); }
   { Preset s;
@@ -46,7 +46,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[11]=0.6000f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="Broken VHS Prom"; s.degree=0.7300f; s.mix=0.8200f; s.outputDb=-3.00f;
+    s.name="Broken VHS Prom"; s.degree=0.7300f; s.mix=0.9700f; s.outputDb=-3.00f;
     s.seed=0x41f13f2101283322ULL;
     s.raw[2]=0.6600f;
     s.raw[73]=0.7000f;
@@ -55,7 +55,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[77]=0.1800f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="That Can't Be Legal"; s.degree=0.9800f; s.mix=0.6800f; s.outputDb=-6.00f;
+    s.name="That Can't Be Legal"; s.degree=0.9800f; s.mix=0.9700f; s.outputDb=-6.00f;
     s.seed=0x9e38f3f867924f7dULL;
     s.raw[42]=0.8000f;
     s.raw[44]=0.7800f;
@@ -64,7 +64,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[48]=0.2800f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="Alien Church"; s.degree=0.8600f; s.mix=0.8100f; s.outputDb=-4.00f;
+    s.name="Alien Church"; s.degree=0.8600f; s.mix=0.9700f; s.outputDb=-4.00f;
     s.seed=0x1661dbeee48c96c5ULL;
     s.raw[13]=0.9500f;
     s.raw[56]=0.5500f;
@@ -72,7 +72,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[14]=0.4700f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="Cosmic Pillow Fight"; s.degree=0.7700f; s.mix=0.8200f; s.outputDb=-4.00f;
+    s.name="Cosmic Pillow Fight"; s.degree=0.7700f; s.mix=0.9700f; s.outputDb=-4.00f;
     s.seed=0xfb1e39b1b5420ab8ULL;
     s.raw[14]=0.6800f;
     s.raw[37]=0.4800f;
@@ -86,7 +86,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[40]=0.7500f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="Drum Shredder"; s.degree=0.8400f; s.mix=0.8100f; s.outputDb=-4.00f;
+    s.name="Drum Shredder"; s.degree=0.8400f; s.mix=0.9700f; s.outputDb=-4.00f;
     s.seed=0xf68b9b6e9641e84fULL;
     s.raw[60]=0.9100f;
     s.raw[68]=0.7300f;
@@ -104,7 +104,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[70]=0.3000f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="Overcaffeinated Spaceship"; s.degree=0.9100f; s.mix=0.8400f; s.outputDb=-5.00f;
+    s.name="Overcaffeinated Spaceship"; s.degree=0.9100f; s.mix=0.9700f; s.outputDb=-5.00f;
     s.seed=0x3867bc08949c4aeeULL;
     s.raw[25]=0.9700f;
     s.raw[4]=0.8100f;
@@ -121,7 +121,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[67]=0.4200f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="No More Straight Lines"; s.degree=0.8200f; s.mix=0.8200f; s.outputDb=-4.00f;
+    s.name="No More Straight Lines"; s.degree=0.8200f; s.mix=0.9700f; s.outputDb=-4.00f;
     s.seed=0xda0d91c4b8f95ed2ULL;
     s.raw[22]=0.7800f;
     s.raw[55]=0.8400f;
@@ -129,7 +129,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[64]=0.7200f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="Petty Theft of Physics"; s.degree=0.8600f; s.mix=0.8600f; s.outputDb=-4.00f;
+    s.name="Petty Theft of Physics"; s.degree=0.8600f; s.mix=0.9700f; s.outputDb=-4.00f;
     s.seed=0xfd3ba0d2cf2763e1ULL;
     s.raw[37]=0.8300f;
     s.raw[27]=0.8300f;
@@ -145,7 +145,7 @@ inline std::vector<Preset> factoryPresets() {
     s.raw[19]=0.6700f;
     p.emplace_back(std::move(s)); }
   { Preset s;
-    s.name="McBoy Ate the Mix"; s.degree=0.9600f; s.mix=0.6800f; s.outputDb=-8.00f;
+    s.name="McBoy Ate the Mix"; s.degree=0.9600f; s.mix=0.9700f; s.outputDb=-8.00f;
     s.seed=0xa86efe6de2d62fefULL;
     s.raw[99]=0.9000f;
     s.raw[58]=0.6600f;
