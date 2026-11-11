@@ -56,12 +56,14 @@ int main() {
         instance.redoShuffle();
         check(instance.getSeed()==seedAfterRandomize, "Redo did not restore seed");
         instance.storeCompare();
-        automate(instance,"fx049",.71f);
+        const float storedFX49=instance.state.getRawParameterValue("fx049")->load();
+        const float alternateFX49=storedFX49>.50f ? .10f : .71f;
+        automate(instance,"fx049",alternateFX49);
         instance.swapCompare();
-        check(instance.state.getRawParameterValue("fx049")->load()<.01f,
+        check(std::abs(instance.state.getRawParameterValue("fx049")->load()-storedFX49)<.002f,
               "A/B swap did not recall stored state");
         instance.swapCompare();
-        check(instance.state.getRawParameterValue("fx049")->load()>.70f,
+        check(std::abs(instance.state.getRawParameterValue("fx049")->load()-alternateFX49)<.002f,
               "A/B swap did not restore alternate state");
         automate(instance,"labels",1.f);
         juce::MemoryBlock bytes;
@@ -81,7 +83,7 @@ int main() {
             check(std::abs(expected-actual)<.0002f,"State reload lost a raw effect value");
         }
         reload.swapCompare();
-        check(reload.state.getRawParameterValue("fx049")->load()<.01f,
+        check(std::abs(reload.state.getRawParameterValue("fx049")->load()-storedFX49)<.002f,
               "State reload lost A/B comparison slot");
         reload.applyFactoryPreset(1);
         check(std::abs(reload.state.getRawParameterValue("fx011")->load()-.85f)<.002f,
