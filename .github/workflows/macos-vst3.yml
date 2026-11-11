@@ -21,39 +21,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extract complete McBoy project
-        shell: bash
+      - name: Verify checked-in source
         run: |
-          python3 - <<'PY'
-          import base64, subprocess, pathlib
-          data = base64.b64decode(pathlib.Path("McBoy-source.tar.xz.b64").read_text().strip(), validate=True)
-          p = subprocess.run(["tar", "-xJf", "-"], input=data, check=True)
-          print(f"Extracted McBoy source ({len(data)} compressed bytes)")
-          PY
-          # Keep the live GitHub workflow instead of the archived copy.
-          git show HEAD:.github/workflows/macos-vst3.yml > .github/workflows/macos-vst3.yml
-          test -f Source/PluginProcessor.cpp
+          test -f Source/Core/Engine.h
           test -f Source/Core/ExtraEffects.h
+          test -f Tests/CoreSmoke.cpp
           test -f scripts/build_macos.sh
 
-      - name: Publish unpacked source files for browsing
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Source Tests Presets docs scripts CMakeLists.txt CMakePresets.json README.md LICENSES.md .gitignore
-          if ! git diff --cached --quiet; then
-            git commit -m "Expand McBoy source tree from verified archive"
-            git push || echo "::warning::Could not push unpacked files; continuing build"
-          fi
-
       - name: Build VST3 and execute macOS tests
+        id: build
+        continue-on-error: true
         shell: bash
         run: bash scripts/build_macos.sh universal
 
       - name: Upload ready-to-install universal VST3
         uses: actions/upload-artifact@v4
-        if: success()
+        if: steps.build.outcome == 'success'
         with:
           name: McBoy-macOS-universal-vst3
           path: |
@@ -61,6 +44,25 @@ jobs:
             dist/McBoy-macOS-universal.vst3.zip.sha256
           if-no-files-found: error
           retention-days: 30
+
+      - name: Report build status to repository
+        if: always()
+        shell: bash
+        env:
+          BUILD_RESULT: ${{ steps.build.outcome }}
+          BUILD_RUN_ID: ${{ github.run_id }}
+          BUILD_SHA: ${{ github.sha }}
+        run: |
+          printf 'McBoy wet/dry fix build\\nRun: %s\\nCommit: %s\\nResult: %s\\nArtifacts: https://github.com/${{ github.repository }}/actions/runs/%s\\n' "$BUILD_RUN_ID" "$BUILD_SHA" "$BUILD_RESULT" "$BUILD_RUN_ID" > BUILD_STATUS.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add BUILD_STATUS.txt
+          git commit -m "Record McBoy macOS build $BUILD_RUN_ID: $BUILD_RESULT" || true
+          git push || echo "::warning::Unable to push build status"
+
+      - name: Fail workflow if tests fail
+        if: steps.build.outcome != 'success'
+        run: exit 1
 
       - name: Upload CMake/Xcode diagnostics if build fails
         uses: actions/upload-artifact@v4
