@@ -1,9 +1,13 @@
 # McBoy — 100-knob experimental audio multi-effect
 
-**Version 0.9.0 — full 100-control DSP prototype and source release candidate.**
-**macOS VST3 binary NOT built or verified.** The available compilation host is Linux x86_64 without Apple's Xcode/macOS SDK or a JUCE checkout. Do not confuse passing the standalone DSP tests with a validated plugin binary.
+**Version 0.9.1 — corrected master wet/dry routing.**
+**macOS binaries are built by GitHub Actions.** See the most recent successful Actions artifact and build logs; DAW sound-quality/host compatibility still need hands-on confirmation.
 
 McBoy is an original 100-knob experimental effects console for music production. Ten banks of ten rotary controls surround a giant **MCBOY!** shuffle button and an independent **DEGREE** intensity ceiling. Labels are OFF by default; Option-/right-click locks a knob. A/B storage and swapping, Undo/Redo, factory preset selection, copy/paste state, true parameter automation, and randomization controls are part of the written JUCE wrapper.
+
+## 0.9.1 mix bug fix
+
+In prior versions the internal wet return was calculated as `(input + effects) / (1 + effectWeights)`, which injected dry audio even at 100% MIX and attenuated the effect returns. The corrected build normalizes the effect-only returns first, then applies the master MIX. A short wet-bus activation ramp preserves click-free neutral behavior at DEGREE=0. The regression test with a solo slap-delay impulse now verifies that the original transient cannot appear at 100% MIX while the delayed transient remains audible.
 
 ## What's implemented
 
