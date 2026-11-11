@@ -43,7 +43,7 @@ cmake -S "$ROOT" -B "$BUILD_DIR" -G Xcode \
 
 # Xcode project is automatically generated at build-mac/McBoy.xcodeproj.
 cmake --build "$BUILD_DIR" --config Release \
-  --target McBoyPlugin_VST3 McBoyPlugin_Standalone mcboy_juce_smoke mcboy_core_smoke mcboy_audio_stress mcboy_uniqueness mcboy_render_demo \
+  --target McBoyPlugin_VST3 McBoyPlugin_Standalone mcboy_juce_smoke mcboy_core_smoke mcboy_audio_stress mcboy_uniqueness mcboy_chaos_intensity mcboy_render_demo \
   --parallel "${MCBOY_JOBS:-4}"
 ctest --test-dir "$BUILD_DIR" -C Release --output-on-failure
 
