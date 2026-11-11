@@ -46,7 +46,7 @@ private:
     struct Snapshot {
         std::array<float,100> raw{};
         std::array<bool,100> locked{};
-        float degree=.3f,mix=.75f,output=0.f;
+        float degree=.72f,mix=1.f,output=0.f;
         bool guard=true,bypass=false,labels=false;
         uint64_t seed=0xA74E12B50B0C0101ULL;
     };
